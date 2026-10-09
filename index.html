@@ -3,281 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حاسبة المطبعة الاحترافية - علب أدوية</title>
+    <title>Classic Print - حاسبة أسعار علب الأدوية</title>
     <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent: #10b981;
-            --accent-hover: #059669;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: #334155;
-        }
         body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            font-family: Tahoma, Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
             margin: 0;
             padding: 20px;
         }
-        .wrapper {
-            max-width: 850px;
+        .container {
+            max-width: 800px;
             margin: 0 auto;
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border);
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        h2 {
+        h1 {
             text-align: center;
-            color: var(--accent);
+            color: #1e3a8a;
             margin-bottom: 5px;
         }
         .subtitle {
             text-align: center;
-            color: var(--text-muted);
-            margin-bottom: 25px;
+            color: #64748b;
             font-size: 0.95rem;
-        }
-        .section-box {
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid var(--border);
-            padding: 20px;
-            border-radius: 12px;
             margin-bottom: 20px;
+            font-weight: bold;
         }
-        .section-box h3 {
-            margin-top: 0;
+        .section-title {
             font-size: 1.1rem;
-            color: #38bdf8;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 8px;
+            color: #0284c7;
+            border-bottom: 2px solid #0284c7;
+            padding-bottom: 5px;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            font-weight: bold;
         }
-        .inputs-grid {
+        .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 15px;
         }
-        .field {
+        .form-group {
             display: flex;
             flex-direction: column;
         }
         label {
+            font-weight: bold;
+            margin-bottom: 5px;
             font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 6px;
         }
         input, select {
-            background: var(--bg-color);
-            border: 1px solid var(--border);
-            color: var(--text-main);
             padding: 10px;
-            border-radius: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
             font-size: 1rem;
-            outline: none;
         }
-        input:focus, select:focus {
-            border-color: var(--accent);
-        }
-        .calc-btn {
-            background-color: var(--accent);
-            color: #0f172a;
-            border: none;
-            width: 100%;
-            padding: 14px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 10px;
-        }
-        .calc-btn:hover {
-            background-color: var(--accent-hover);
+        button {
+            background-color: #1e3a8a;
             color: white;
-        }
-        .output-card {
+            border: none;
+            padding: 12px;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
             margin-top: 25px;
-            background: #090d16;
-            border: 1px solid var(--border);
-            padding: 20px;
-            border-radius: 12px;
-            display: none;
+            font-weight: bold;
         }
-        .output-row {
+        button:hover {
+            background-color: #1e40af;
+        }
+        .result-box {
+            margin-top: 25px;
+            background: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            border-right: 5px solid #0284c7;
+        }
+        .result-item {
             display: flex;
             justify-content: space-between;
-            margin: 12px 0;
+            margin: 10px 0;
             font-size: 1.05rem;
         }
-        .output-row span:last-child {
+        .result-item span:last-child {
             font-weight: bold;
-            color: var(--accent);
-        }
-        .final-price-row {
-            border-top: 1px dashed var(--border);
-            padding-top: 12px;
-            margin-top: 12px;
-            font-size: 1.2rem;
-        }
-        .final-price-row span:last-child {
-            color: #f43f5e;
-            font-size: 1.4rem;
+            color: #047857;
         }
     </style>
 </head>
 <body>
 
-<div class="wrapper">
-    <h2>حاسبة عُلب الأدوية (النسخة الاحترافية)</h2>
-    <div class="subtitle">نظام حساب تكاليف الطباعة الأوتوماتيكي للمطابع</div>
+<div class="container">
+    <h1>Classic Print</h1>
+    <div class="subtitle">حاسبة تكاليف وأسعار عُلب الأدوية الأوتوماتيكية</div>
 
-    <!-- 1. أبعاد العلبة -->
-    <div class="section-box">
-        <h3>1. أبعاد العلبة المطلوبة (سم)</h3>
-        <div class="inputs-grid">
-            <div class="field">
-                <label>الطول</label>
-                <input type="number" id="boxL" value="6" step="0.1">
-            </div>
-            <div class="field">
-                <label>العرض</label>
-                <input type="number" id="boxW" value="3" step="0.1">
-            </div>
-            <div class="field">
-                <label>الارتفاع</label>
-                <input type="number" id="boxH" value="12" step="0.1">
-            </div>
-            <div class="field">
-                <label>الكمية المطلوبة (علبة)</label>
-                <input type="number" id="boxQty" value="10000">
-            </div>
+    <div class="section-title">1. مقاسات العلبة والكمية</div>
+    <div class="grid">
+        <div class="form-group">
+            <label>طول العلبة (سم):</label>
+            <input type="number" id="length" value="5" step="0.1">
+        </div>
+        <div class="form-group">
+            <label>عرض العلبة (سم):</label>
+            <input type="number" id="width" value="3" step="0.1">
+        </div>
+        <div class="form-group">
+            <label>ارتفاع العلبة (سم):</label>
+            <input type="number" id="height" value="10" step="0.1">
+        </div>
+        <div class="form-group">
+            <label>الكمية المطلوبة (علبة):</label>
+            <input type="number" id="quantity" value="5000">
         </div>
     </div>
 
-    <!-- 2. مواصفات الورق والطباعة -->
-    <div class="section-box">
-        <h3>2. مواصفات الورق والطباعة</h3>
-        <div class="inputs-grid">
-            <div class="field">
-                <label>عرض الفرخ (سم)</label>
-                <input type="number" id="sheetW" value="70">
-            </div>
-            <div class="field">
-                <label>طول الفرخ (سم)</label>
-                <input type="number" id="sheetH" value="100">
-            </div>
-            <div class="field">
-                <label>ألوان الطباعة</label>
-                <select id="printColors">
-                    <option value="1">لون واحد</option>
-                    <option value="2">لونين</option>
-                    <option value="4" selected>4 ألوان (سبرنت)</option>
-                </select>
-            </div>
+    <div class="section-title">2. مقاس الفرخ والطباعة</div>
+    <div class="grid">
+        <div class="form-group">
+            <label>عرض فرخ الورق (سم):</label>
+            <input type="number" id="sheetWidth" value="70">
+        </div>
+        <div class="form-group">
+            <label>طول فرخ الورق (سم):</label>
+            <input type="number" id="sheetHeight" value="100">
+        </div>
+        <div class="form-group">
+            <label>عدد الألوان:</label>
+            <select id="colors">
+                <option value="1">1 لون</option>
+                <option value="2">2 لون</option>
+                <option value="4" selected>4 ألوان (سبرنت)</option>
+            </select>
         </div>
     </div>
 
-    <!-- 3. التكاليف المالية -->
-    <div class="section-box">
-        <h3>3. التكاليف المالية والأسعار</h3>
-        <div class="inputs-grid">
-            <div class="field">
-                <label>سعر فرخ الورق (ج.م)</label>
-                <input type="number" id="costPaper" value="18">
-            </div>
-            <div class="field">
-                <label>تكلفة البليتات CTP (ج.م)</label>
-                <input type="number" id="costPlates" value="450">
-            </div>
-            <div class="field">
-                <label>طباعة 1000 فرخ (ج.م)</label>
-                <input type="number" id="costPress" value="300">
-            </div>
-            <div class="field">
-                <label>تكسير ولزق للعلبة (ج.م)</label>
-                <input type="number" id="costFinishing" value="0.75" step="0.05">
-            </div>
-            <div class="field">
-                <label>هامش الربح الإداري (%)</label>
-                <input type="number" id="marginProfit" value="25">
-            </div>
+    <div class="section-title">3. أسعار الخامات والتصنيع</div>
+    <div class="grid">
+        <div class="form-group">
+            <label>سعر فرخ الورق (جنيه):</label>
+            <input type="number" id="paperPrice" value="15">
+        </div>
+        <div class="form-group">
+            <label>سعر طقم البليتات (CTP):</label>
+            <input type="number" id="platePrice" value="400">
+        </div>
+        <div class="form-group">
+            <label>طباعة 1000 فرخ (جنيه):</label>
+            <input type="number" id="printPrice" value="250">
+        </div>
+        <div class="form-group">
+            <label>تكسير ولزق للعلبة الواحدة:</label>
+            <input type="number" id="finishingPrice" value="0.5" step="0.1">
+        </div>
+        <div class="form-group">
+            <label>هامش الربح (%):</label>
+            <input type="number" id="profitMargin" value="20">
         </div>
     </div>
 
-    <button class="calc-btn" onclick="runCalculation()">احسب التكلفة النهائية والأسعار</button>
+    <button onclick="calculatePrice()">احسب التكلفة وسعر العلبة</button>
 
-    <!-- النتائج -->
-    <div class="output-card" id="outputBox">
-        <div class="output-row">
-            <span>مساحة العلبة المفرودة:</span>
-            <span id="outArea">0 سم²</span>
+    <div class="result-box" id="resultSection" style="display: none;">
+        <h3>النتائج:</h3>
+        <div class="result-item">
+            <span>عدد العلب التقديري في الفرخ:</span>
+            <span id="resBoxesPerSheet">0 علبة</span>
         </div>
-        <div class="output-row">
-            <span>العلب في الفرخ الواحد:</span>
-            <span id="outPerSheet">0 علبة</span>
+        <div class="result-item">
+            <span>عدد الأفرخ المطلوبة (بالهالك 10%):</span>
+            <span id="resSheets">0 فرخ</span>
         </div>
-        <div class="output-row">
-            <span>إجمالي الأفرخ (شامل 12% هالك):</span>
-            <span id="outSheets">0 فرخ</span>
-        </div>
-        <div class="output-row">
+        <div class="result-item">
             <span>التكلفة الإجمالية للطلبية:</span>
-            <span id="outTotalCost">0 ج.م</span>
+            <span id="resTotalCost">0 ج.م</span>
         </div>
-        <div class="output-row final-price-row">
+        <div class="result-item" style="border-top: 2px dashed #ccc; padding-top: 10px; margin-top: 10px;">
             <span>سعر بيع العلبة الواحدة:</span>
-            <span id="outUnitPrice">0 ج.م</span>
+            <span id="resBoxPrice" style="color: #dc2626; font-size: 1.2rem;">0 ج.م</span>
         </div>
     </div>
 </div>
 
 <script>
-function runCalculation() {
-    let l = parseFloat(document.getElementById('boxL').value) || 0;
-    let w = parseFloat(document.getElementById('boxW').value) || 0;
-    let h = parseFloat(document.getElementById('boxH').value) || 0;
-    let qty = parseFloat(document.getElementById('boxQty').value) || 0;
+function calculatePrice() {
+    let l = parseFloat(document.getElementById('length').value) || 0;
+    let w = parseFloat(document.getElementById('width').value) || 0;
+    let h = parseFloat(document.getElementById('height').value) || 0;
+    let qty = parseFloat(document.getElementById('quantity').value) || 0;
 
-    let sW = parseFloat(document.getElementById('sheetW').value) || 70;
-    let sH = parseFloat(document.getElementById('sheetH').value) || 100;
+    let sW = parseFloat(document.getElementById('sheetWidth').value) || 70;
+    let sH = parseFloat(document.getElementById('sheetHeight').value) || 100;
 
-    let costPaper = parseFloat(document.getElementById('costPaper').value) || 0;
-    let costPlates = parseFloat(document.getElementById('costPlates').value) || 0;
-    let costPress = parseFloat(document.getElementById('costPress').value) || 0;
-    let costFinishing = parseFloat(document.getElementById('costFinishing').value) || 0;
-    let marginProfit = parseFloat(document.getElementById('marginProfit').value) || 0;
+    let paperPrice = parseFloat(document.getElementById('paperPrice').value) || 0;
+    let platePrice = parseFloat(document.getElementById('platePrice').value) || 0;
+    let printPricePerThousand = parseFloat(document.getElementById('printPrice').value) || 0;
+    let finishingPerBox = parseFloat(document.getElementById('finishingPrice').value) || 0;
+    let profitMargin = parseFloat(document.getElementById('profitMargin').value) || 0;
 
-    // مساحة الصندوق مفرود
-    let uW = (l + w) * 2 + 1.5;
-    let uH = h + w + 2;
-    let boxArea = uW * uH;
+    let unfoldedWidth = (l + w) * 2 + 1.5;
+    let unfoldedHeight = h + w + 2;
+    let boxArea = unfoldedWidth * unfoldedHeight;
 
     let sheetArea = sW * sH;
-    let boxesPerSheet = Math.floor((sheetArea / boxArea) * 0.82);
+    let boxesPerSheet = Math.floor((sheetArea / boxArea) * 0.85);
     if (boxesPerSheet < 1) boxesPerSheet = 1;
 
-    let totalSheets = Math.ceil((qty / boxesPerSheet) * 1.12);
+    let rawSheets = qty / boxesPerSheet;
+    let totalSheets = Math.ceil(rawSheets * 1.10);
 
-    let paperExp = totalSheets * costPaper;
-    let pressExp = (totalSheets / 1000) * costPress;
-    let finishingExp = qty * costFinishing;
+    let paperTotalCost = totalSheets * paperPrice;
+    let printingTotalCost = (totalSheets / 1000) * printPricePerThousand;
+    let finishingTotalCost = qty * finishingPerBox;
+    
+    let baseCost = paperTotalCost + printingTotalCost + platePrice + finishingTotalCost;
+    let finalTotalWithProfit = baseCost * (1 + (profitMargin / 100));
+    let pricePerBox = finalTotalWithProfit / qty;
 
-    let totalCostBeforeProfit = paperExp + pressExp + costPlates + finishingExp;
-    let finalAmount = totalCostBeforeProfit * (1 + (marginProfit / 100));
-    let pricePerPiece = finalAmount / qty;
+    document.getElementById('resBoxesPerSheet').innerText = boxesPerSheet + " علبة";
+    document.getElementById('resSheets').innerText = totalSheets.toLocaleString() + " فرخ";
+    document.getElementById('resTotalCost').innerText = finalTotalWithProfit.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " ج.م";
+    document.getElementById('resBoxPrice').innerText = pricePerBox.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " ج.م";
 
-    document.getElementById('outArea').innerText = boxArea.toFixed(1) + " سم²";
-    document.getElementById('outPerSheet').innerText = boxesPerSheet + " علبة";
-    document.getElementById('outSheets').innerText = totalSheets.toLocaleString() + " فرخ";
-    document.getElementById('outTotalCost').innerText = finalAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " ج.م";
-    document.getElementById('outUnitPrice').innerText = pricePerPiece.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " ج.م";
-
-    document.getElementById('outputBox').style.display = 'block';
+    document.getElementById('resultSection').style.display = 'block';
 }
 </script>
 
 </body>
 </html>
+
