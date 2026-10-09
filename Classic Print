@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة أسعار علب الأدوية - مطابع الكلاسيك</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #0ea5e9;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #cbd5e1;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 5px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+        input, select {
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.3s;
+        }
+        input:focus, select:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 5px rgba(14, 165, 233, 0.3);
+        }
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 25px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #1e40af;
+        }
+        .result-box {
+            margin-top: 30px;
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 8px;
+            border-right: 5px solid var(--secondary);
+        }
+        .result-box h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+        .result-item span:last-child {
+            font-weight: bold;
+            color: #047857;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>حاسبة أسعار علب الأدوية (كلاسيك)</h1>
+
+    <div class="section-title">1. مدخلات العلبة والكمية</div>
+    <div class="grid">
+        <div class="form-group">
+            <label for="quantity">الكمية المطلوبة (علبة):</label>
+            <input type="number" id="quantity" value="5000">
+        </div>
+        <div class="form-group">
+            <label for="boxesPerSheet">عدد العلب في الفرخ الواحد:</label>
+            <input type="number" id="boxesPerSheet" value="12">
+        </div>
+        <div class="form-group">
+            <label for="colors">عدد الألوان (وش):</label>
+            <select id="colors">
+                <option value="1">1 لون</option>
+                <option value="2">2 لون</option>
+                <option value="4" selected>4 ألوان (سبرنت)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="section-title">2. أسعار الخامات والتصنيع (قابلة للتعديل)</div>
+    <div class="grid">
+        <div class="form-group">
+            <label for="paperPrice">سعر فرخ الورق (جنيه):</label>
+            <input type="number" id="paperPrice" value="15">
+        </div>
+        <div class="form-group">
+            <label for="platePrice">سعر طقم البليتات (CTP):</label>
+            <input type="number" id="platePrice" value="400">
+        </div>
+        <div class="form-group">
+            <label for="printPrice">تكلفة طباعة الـ 1000 فرخ:</label>
+            <input type="number" id="printPrice" value="250">
+        </div>
+        <div class="form-group">
+            <label for="finishingPrice">مصنعية التكسير واللزق (لكل علبة):</label>
+            <input type="number" id="finishingPrice" value="0.5" step="0.1">
+        </div>
+        <div class="form-group">
+            <label for="profitMargin">هامش الربح (%):</label>
+            <input type="number" id="profitMargin" value="20">
+        </div>
+    </div>
+
+    <button onclick="calculatePrice()">احساب التكلفة والسعر</button>
+
+    <div class="result-box" id="resultSection" style="display: none;">
+        <h3>نتائج الحسابات:</h3>
+        <div class="result-item">
+            <span>عدد الأفرخ المطلوبة (بالهالك):</span>
+            <span id="resSheets">0</span>
+        </div>
+        <div class="result-item">
+            <span>تكلفة الورق الإجمالية:</span>
+            <span id="resPaperCost">0 ج.م</span>
+        </div>
+        <div class="result-item">
+            <span>تكلفة الطباعة والبليتات:</span>
+            <span id="resPrintCost">0 ج.م</span>
+        </div>
+        <div class="result-item">
+            <span>التكلفة الإجمالية للطلبية:</span>
+            <span id="resTotalCost">0 ج.م</span>
+        </div>
+        <div class="result-item" style="border-top: 2px dashed #cbd5e1; padding-top: 10px; margin-top: 10px;">
+            <span>سعر العلبة الواحدة للعميل:</span>
+            <span id="resBoxPrice" style="color: #dc2626; font-size: 1.3rem;">0 ج.م</span>
+        </div>
+    </div>
+</div>
+
+<script>
+function calculatePrice() {
+    // قراءة المدخلات
+    let qty = parseFloat(document.getElementById('quantity').value) || 0;
+    let boxesPerSheet = parseFloat(document.getElementById('boxesPerSheet').value) || 1;
+    let paperPrice = parseFloat(document.getElementById('paperPrice').value) || 0;
+    let platePrice = parseFloat(document.getElementById('platePrice').value) || 0;
+    let printPricePerThousand = parseFloat(document.getElementById('printPrice').value) || 0;
+    let finishingPerBox = parseFloat(document.getElementById('finishingPrice').value) || 0;
+    let profitMargin = parseFloat(document.getElementById('profitMargin').value) || 0;
+
+    // حساب عدد الأفرخ الأساسي مع إضافة 10% هالك طباعة وقص
+    let rawSheets = qty / boxesPerSheet;
+    let totalSheets = Math.ceil(rawSheets * 1.10);
+
+    // حساب التكاليف
+    let paperTotalCost = totalSheets * paperPrice;
+    let printingTotalCost = (totalSheets / 1000) * printPricePerThousand;
+    let finishingTotalCost = qty * finishingPerBox;
+    
+    // إجمالي التكلفة بدون ربح
+    let baseCost = paperTotalCost + printingTotalCost + platePrice + finishingTotalCost;
+
+    // إضافة هامش الربح
+    let finalTotalWithProfit = baseCost * (1 + (profitMargin / 100));
+
+    // سعر العلبة الواحدة
+    let pricePerBox = finalTotalWithProfit / qty;
+
+    // عرض النتائج
+    document.getElementById('resSheets').innerText = totalSheets.toLocaleString() + " فرخ";
+    document.getElementById('resPaperCost').innerText = paperTotalCost.toLocaleString() + " ج.م";
+    document.getElementById('resPrintCost').innerText = (printingTotalCost + platePrice).toLocaleString() + " ج.م";
+    document.getElementById('resTotalCost').innerText = finalTotalWithProfit.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " ج.م";
+    document.getElementById('resBoxPrice').innerText = pricePerBox.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " ج.م";
+
+    // إظهار صندوق النتائج
+    document.getElementById('resultSection').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
