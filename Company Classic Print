@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Classic Print - حاسبة علب الأدوية</title>
+<style>
+*{box-sizing:border-box;font-family:'Cairo', Tahoma, sans-serif}
+body{background:#f1f5f9;margin:0;padding:15px}
+.card{max-width:480px;margin:auto;background:#fff;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,.1);overflow:hidden}
+.head{background:#111;color:#fff;padding:22px;text-align:center}
+.head h1{margin:0;letter-spacing:2px}
+.head p{margin:5px 0 0;color:#fbbf24}
+.body{padding:22px}
+label{font-weight:bold;margin-top:14px;display:block;font-size:14px}
+input,select{width:100%;padding:13px;border:1.5px solid #e2e8f0;border-radius:12px;margin-top:6px;font-size:15px}
+.row{display:flex;gap:10px}.row>div{flex:1}
+.btn{width:100%;background:#111;color:#fff;border:none;padding:15px;border-radius:14px;font-size:18px;font-weight:bold;margin-top:20px;cursor:pointer}
+.btn:hover{background:#000}
+.result{margin-top:20px;background:#111;color:#fff;border-radius:16px;padding:18px;display:none}
+.result .price{font-size:28px;font-weight:bold;color:#fbbf24}
+.small{font-size:12px;color:#94a3b8;margin-top:8px}
+.print{margin-top:10px;background:#fff;color:#111;border:1.5px solid #111}
+</style>
+</head>
+<body>
+<div class="card">
+<div class="head">
+<h1>CLASSIC PRINT</h1>
+<p>Pharmaceutical Packaging Expert</p>
+</div>
+<div class="body">
+<label>مقاس العلبة (سم)</label>
+<div class="row">
+<div><input id="l" placeholder="طول" type="number" value="10"></div>
+<div><input id="w" placeholder="عرض" type="number" value="5"></div>
+<div><input id="h" placeholder="ارتفاع" type="number" value="3"></div>
+</div>
+
+<label>الكمية</label>
+<input id="qty" type="number" value="5000">
+
+<label>الخامة</label>
+<select id="paper">
+<option value="0.38">دوبلكس 250جم - اقتصادي</option>
+<option value="0.52" selected>دوبلكس 300جم - الأكثر طلبا</option>
+<option value="0.68">دوبلكس 350جم - فاخر</option>
+<option value="0.95">كرافت 350جم - طبيعي</option>
+</select>
+
+<label>التشطيب</label>
+<select id="finish">
+<option value="0.15">بدون سلوفان</option>
+<option value="0.35" selected>سلوفان مط / لامع</option>
+<option value="0.60">سلوفان + سبوت UV</option>
+<option value="0.85">سلوفان + بصمة دهب + سبوت</option>
+</select>
+
+<label>هامش الربح %</label>
+<input id="profit" type="number" value="35">
+
+<button class="btn" onclick="calc()">احسب عرض السعر 🔥</button>
+
+<div id="res" class="result"></div>
+<button class="btn print" onclick="window.print()" style="display:none" id="printBtn">اطبع عرض السعر</button>
+<div class="small">* السعر تقريبي شامل الطباعة والتكسير واللصق. الأسعار متغيرة حسب سعر الدولار والخامات.</div>
+</div>
+</div>
+
+<script>
+function calc(){
+let L=parseFloat(l.value)||0,W=parseFloat(w.value)||0,H=parseFloat(h.value)||0;
+let qty=parseFloat(qty.value)||1000;
+let paper=parseFloat(document.getElementById('paper').value);
+let finish=parseFloat(document.getElementById('finish').value);
+let profit=parseFloat(document.getElementById('profit').value)||35;
+
+let baseCost = paper + finish + 0.28; // طباعة وتكسير
+let boxPrice = baseCost * (1 + profit/100);
+let total = boxPrice * qty;
+let thousandPrice = boxPrice * 1000;
+
+let resDiv = document.getElementById('res');
+resDiv.style.display='block';
+document.getElementById('printBtn').style.display='block';
+
+resDiv.innerHTML = `
+<div>مقاس: ${L} x ${W} x ${H} سم</div>
+<div style="margin-top:10px">سعر العلبة الواحدة:</div>
+<div class="price">${boxPrice.toFixed(2)} جنيه</div>
+<div style="margin-top:12px;display:flex;justify-content:space-between">
+<span>سعر الألف:</span><b>${thousandPrice.toFixed(0)} جنيه</b>
+</div>
+<div style="display:flex;justify-content:space-between;margin-top:6px">
+<span>الإجمالي (${qty}):</span><b style="color:#fbbf24">${total.toFixed(0)} جنيه</b>
+</div>
+`;
+}
+</script>
+</div>
+</body>
+</html>
